@@ -1,0 +1,9 @@
+Title: Disentangling Faithfulness Hallucinations in Retrieval-Augmented Generation: A Systematic Benchmark and Analysis
+DOI: 10.1007/s10994-026-07121-y
+
+Abstract:
+<jats:title>Abstract</jats:title>
+                  <jats:p>
+                    <jats:italic>Faithfulness hallucinations</jats:italic>
+                    , where large language models generate outputs unsupported by retrieved evidence, remain a central challenge for trustworthy AI. We present a systematic empirical evaluation of faithfulness in retrieval-augmented generation (RAG) systems using two benchmark datasets, HotpotQA and HaluBench, covering both multi-hop reasoning and single-hop hallucination detection. We analyze three small-to-mid-sized (2B-8B) open-weight LLMs in combination with multiple retrieval strategies, including sparse, dense, and hybrid approaches, as well as score-based and rank-based fusion techniques, enabling a comprehensive assessment of retrieval-generation interactions. By disentangling retrieval and generation errors, we characterize how different pipeline components contribute to hallucinations in RAG systems. Our analysis provides actionable insights and practical evaluation protocols, highlighting the critical role of robust retrieval and careful system design. These findings offer a benchmarking-oriented perspective for developing more reliable and faithful RAG systems within evaluated model scales.
+                  </jats:p>

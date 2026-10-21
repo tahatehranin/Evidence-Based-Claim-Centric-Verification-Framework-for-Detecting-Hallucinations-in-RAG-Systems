@@ -1,0 +1,5 @@
+Title: Contrastive hallucination impact mitigation and evaluation for zero-shot dense retrieval systems
+DOI: 10.1007/s10115-026-02892-1
+
+Abstract:
+No abstract available.

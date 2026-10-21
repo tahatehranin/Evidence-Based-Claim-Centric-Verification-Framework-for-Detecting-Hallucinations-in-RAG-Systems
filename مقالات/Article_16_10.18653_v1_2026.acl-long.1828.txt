@@ -1,0 +1,5 @@
+Title: MARCH: Multi-Agent Reinforced Check for Hallucination
+DOI: 10.18653/v1/2026.acl-long.1828
+
+Abstract:
+No abstract available.

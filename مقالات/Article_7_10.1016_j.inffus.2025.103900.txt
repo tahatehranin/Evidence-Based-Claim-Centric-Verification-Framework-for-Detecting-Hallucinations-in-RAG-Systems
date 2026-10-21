@@ -1,0 +1,5 @@
+Title: Exploring knowledge poisoning attacks to retrieval-augmented generation
+DOI: 10.1016/j.inffus.2025.103900
+
+Abstract:
+No abstract available.

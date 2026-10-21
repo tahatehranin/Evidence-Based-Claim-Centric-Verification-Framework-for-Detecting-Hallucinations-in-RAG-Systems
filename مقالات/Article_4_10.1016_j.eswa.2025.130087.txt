@@ -1,0 +1,12 @@
+Title: QR
+                    <mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" altimg="si1.svg">
+                      <mml:msup>
+                        <mml:mrow/>
+                        <mml:mn>3</mml:mn>
+                      </mml:msup>
+                    </mml:math>
+                    AG: Dynamic Retrieval-Augmented Generation via Query-Response Relevance Threshold Judgement
+DOI: 10.1016/j.eswa.2025.130087
+
+Abstract:
+No abstract available.

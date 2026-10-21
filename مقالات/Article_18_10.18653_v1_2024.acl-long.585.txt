@@ -1,0 +1,5 @@
+Title: RAGTruth: A Hallucination Corpus for Developing Trustworthy Retrieval-Augmented Language Models
+DOI: 10.18653/v1/2024.acl-long.585
+
+Abstract:
+No abstract available.

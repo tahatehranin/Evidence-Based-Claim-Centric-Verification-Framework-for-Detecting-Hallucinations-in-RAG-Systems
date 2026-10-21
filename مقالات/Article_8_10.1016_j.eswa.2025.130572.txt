@@ -1,0 +1,5 @@
+Title: Fact in fragments: Deconstructing complex claims via LLM-based atomic fact extraction and verification
+DOI: 10.1016/j.eswa.2025.130572
+
+Abstract:
+No abstract available.

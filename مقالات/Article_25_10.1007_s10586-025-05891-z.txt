@@ -1,0 +1,5 @@
+Title: The rise of hallucination in large language models: systematic reviews, performance analysis and challenges
+DOI: 10.1007/s10586-025-05891-z
+
+Abstract:
+No abstract available.

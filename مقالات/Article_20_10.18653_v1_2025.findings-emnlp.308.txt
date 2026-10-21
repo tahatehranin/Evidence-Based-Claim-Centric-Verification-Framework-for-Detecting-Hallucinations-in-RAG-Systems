@@ -1,0 +1,5 @@
+Title: E-Verify: A Paradigm Shift to Scalable Embedding-based Factuality Verification
+DOI: 10.18653/v1/2025.findings-emnlp.308
+
+Abstract:
+No abstract available.

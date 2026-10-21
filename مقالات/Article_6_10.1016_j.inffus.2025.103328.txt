@@ -1,0 +1,5 @@
+Title: PNCD: Mitigating LLM hallucinations in noisy environments–A medical case study
+DOI: 10.1016/j.inffus.2025.103328
+
+Abstract:
+No abstract available.

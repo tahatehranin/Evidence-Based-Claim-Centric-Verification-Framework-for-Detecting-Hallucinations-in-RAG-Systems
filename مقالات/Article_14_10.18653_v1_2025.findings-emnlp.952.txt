@@ -1,0 +1,5 @@
+Title: Representation-based Broad Hallucination Detectors Fail to Generalize Out of Distribution
+DOI: 10.18653/v1/2025.findings-emnlp.952
+
+Abstract:
+No abstract available.
