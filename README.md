@@ -1,10 +1,14 @@
 # Evidence-Based Claim-Centric Verification Framework for Hallucination Detection in RAG Systems
 
+![Logo Placeholder](https://img.shields.io/badge/RAG-Verification-blue.svg?style=for-the-badge&logo=appveyor)
+![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python)
+
 ## Overview
 
 This framework implements evidence-based hallucination detection for RAG systems using a claim-centric approach with hierarchical verification.
 
-## Key Features
+## 🚀 Key Features
 
 - **Claim Decomposition**: Splits generated answers into atomic, verifiable claims
 - **Hierarchical Verification**: Local + global verification pipeline
@@ -12,7 +16,7 @@ This framework implements evidence-based hallucination detection for RAG systems
 - **Multi-Signal Scoring**: Combines lexical similarity + contradiction detection + counterfactual stability
 - **Entity-Centric Alignment**: Identity, semantic, and consistency alignment dimensions
 
-## Architecture
+## 🏗️ Architecture
 
 ### Pipeline Stages
 
@@ -36,7 +40,7 @@ This framework implements evidence-based hallucination detection for RAG systems
    - AND-join: single unfaithful claim flags entire answer
    - Labels: Entailed, Contradicted, Baseless
 
-## Verification Labels
+## 📊 Verification Labels
 
 | Label | Meaning | Confidence Formula |
 |-------|---------|---------------------|
@@ -44,7 +48,7 @@ This framework implements evidence-based hallucination detection for RAG systems
 | Contradicted | Claim conflicts with evidence | Contradiction detection + negation patterns |
 | Baseless | No relevant evidence found | Low similarity + neutral NLI |
 
-## Evidence Sources
+## 📚 Evidence Sources
 
 ### Internal Knowledge Base
 - FAISS-indexed document chunks (configurable)
@@ -56,7 +60,7 @@ This framework implements evidence-based hallucination detection for RAG systems
 - **Tier 2**: Established news organizations (weight 0.6)
 - **Tier 3**: Blogs, forums (weight 0.3)
 
-## Installation
+## 🛠️ Installation
 
 ```bash
 # Clone repository
@@ -67,7 +71,7 @@ cd Evidence-Based-Claim-Centric-Verification-Framework-for-Detecting-Hallucinati
 bash setup.sh
 ```
 
-## Usage
+## 💻 Usage
 
 ```python
 from verifier import RAGHallucinationVerifier
@@ -91,7 +95,17 @@ for claim in result.claim_results:
     print(f"    Confidence: {claim['confidence']:.3f}")
 ```
 
-## Evaluation
+## 🧪 Testing and CI
+
+GitHub Actions is set up to run tests on every push and pull request to the `main` branch.
+
+To run tests locally:
+```bash
+pip install pytest pytest-cov
+pytest tests/
+```
+
+## 📄 Evaluation
 
 Test cases cover:
 - Clean entailment (all claims supported)
@@ -100,13 +114,13 @@ Test cases cover:
 - Negation contradictions
 - Baseless claims (no evidence)
 
-## Dependencies
+## 📦 Dependencies
 
-- Python 3.13+
+- Python 3.10+
 - No heavy ML models required (uses lightweight lexical/similarity scoring)
 - Optional: sentence-transformers for enhanced similarity
 
-## Configuration
+## ⚙️ Configuration
 
 ```python
 verifier = RAGHallucinationVerifier(

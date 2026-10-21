@@ -5,3 +5,6 @@ accelerate>=0.20.0
 scikit-learn>=1.0.0
 numpy>=1.21.0
 python-dotenv>=1.0.0
+requests
+pytest>=7.0.0
+pytest-cov>=4.0.0
