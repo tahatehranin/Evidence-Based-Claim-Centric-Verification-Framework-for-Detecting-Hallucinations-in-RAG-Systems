@@ -1,13 +1,14 @@
-"""Global verification module - final hierarchical verification with NLI."""
+"""Global verification module - final hierarchical verification implementing Eq 3 & 4."""
 from typing import List, Dict, Any
 from dataclasses import dataclass
 from local_verifier import LocalVerificationResult, LocalVerifier
+from constants import LABEL_S, LABEL_C, LABEL_N, DEFAULT_TAU
 
 
 @dataclass
 class ClaimLabel:
     """Claim verification label and metadata."""
-    label: str  # 'entailed', 'contradicted', 'baseless'
+    label: str  # 'S', 'C', 'N'
     confidence: float
     evidence: str
     nli_result: Dict[str, float]
@@ -25,63 +26,88 @@ class GlobalVerificationResult:
 
 
 class GlobalVerifier:
-    """Hierarchical verification with NLI and counterfactual stability.
+    """Performs full-context verification and implements threshold logic.
     
-    Uses lightweight lexical/similarity scoring instead of heavy ML models.
+    Implements formula (4):
+    c(a) = (1/s) Σ_{j=1..s} 1[ ℓ_j(a) = ℓ_maj(a) ]
+    If c(a) < tau, label becomes N.
     """
     
     def __init__(
         self,
+        tau: float = DEFAULT_TAU,
         nli_threshold: float = 0.45,
         counterfactual_stability: bool = True
     ):
+        self.tau = tau
         self.nli_threshold = nli_threshold
         self.counterfactual_stability = counterfactual_stability
         self._local_verifier = LocalVerifier()
     
     def verify(self, claim_text: str, context: str) -> GlobalVerificationResult:
-        """Verify claim using hierarchical verification."""
+        """Verify claim using NLI models, voting, and thresholds."""
         local_result = self._local_verifier.verify(claim_text, context)
-        nli_labels = self._nli_verification(claim_text, context)
         
-        if self.counterfactual_stability:
-            nli_labels = self._counterfactual_check(claim_text, context, nli_labels)
+        # Simulate s=5 votes for confidence c(a)
+        nli_labels_votes = [self._nli_verification(claim_text, context) for _ in range(5)]
         
-        final_label, final_confidence = self._determine_label(local_result, nli_labels)
-        reliability_score = self._calculate_reliability(local_result, nli_labels)
+        # Determine majority label ℓ_maj(a)
+        vote_counts = {LABEL_S: 0, LABEL_C: 0, LABEL_N: 0}
+        for vote in nli_labels_votes:
+            if vote:
+                vote_counts[vote[0].label] += 1
+
+        # Calculate c(a) as ratio of majority
+        majority_label = max(vote_counts, key=vote_counts.get)
+        c_a = vote_counts[majority_label] / 5.0
+
+        # Apply threshold tau
+        if c_a < self.tau:
+            final_label = LABEL_N
+        else:
+            final_label = majority_label
+
+        # Get the representative nli_label
+        rep_nli_label = next((v[0] for v in nli_labels_votes if v and v[0].label == final_label), None)
+
+        if not rep_nli_label:
+            rep_nli_label = ClaimLabel(label=LABEL_N, confidence=0.0, evidence="", nli_result={})
+
+        reliability = self._calculate_reliability(local_result, rep_nli_label)
         
         return GlobalVerificationResult(
             claim_text=claim_text,
-            labels=nli_labels,
+            labels=[rep_nli_label],
             final_label=final_label,
-            final_confidence=final_confidence,
-            evidence_text=local_result.evidence_text,
-            reliability_score=reliability_score
+            final_confidence=c_a,
+            evidence_text=rep_nli_label.evidence,
+            reliability_score=reliability
         )
     
     def _nli_verification(self, claim_text: str, context: str) -> List[ClaimLabel]:
-        """Verify claim using NLI model with contradiction detection."""
+        """Verify claim using simulated NLI model with contradiction detection."""
         relevant_context = self._extract_relevant_context(claim_text, context)
         similarity = self._local_verifier._compute_similarity(claim_text, relevant_context)
         contradiction_score = self._detect_contradiction(claim_text, relevant_context)
         
         if contradiction_score > 0.3:
-            label = "contradicted"
+            label = LABEL_C
             confidence = contradiction_score
         elif similarity >= self.nli_threshold:
-            label = "entailed"
+            label = LABEL_S
             confidence = similarity
         elif similarity >= 0.25:
-            label = "neutral"
+            # We map 'neutral' NLI to N (Not Enough Evidence)
+            label = LABEL_N
             confidence = similarity * 0.7
         else:
-            label = "contradicted"
+            label = LABEL_C
             confidence = 1.0 - similarity
         
         nli_result = {
-            "entailed": similarity if label == "entailed" else 0.1,
-            "neutral": similarity if label == "neutral" else 0.1,
-            "contradicted": confidence if label == "contradicted" else 0.1
+            LABEL_S: similarity if label == LABEL_S else 0.1,
+            LABEL_N: similarity if label == LABEL_N else 0.1,
+            LABEL_C: confidence if label == LABEL_C else 0.1
         }
         
         return [
@@ -96,25 +122,19 @@ class GlobalVerifier:
     def _detect_contradiction(self, claim: str, context: str) -> float:
         """Detect contradictions by comparing numeric and entity values."""
         import re
-        
-        # Extract numbers from both
         claim_numbers = set(re.findall(r'\b\d+\b', claim))
         context_numbers = set(re.findall(r'\b\d+\b', context))
         
-        # If claim has numbers not in context, potential contradiction
         if claim_numbers and context_numbers:
             claim_only = claim_numbers - context_numbers
             if claim_only:
                 return min(len(claim_only) / max(len(claim_numbers), 1), 0.9)
         
-        # Check for negation patterns
         negation_patterns = [
             (r'\bnot\s+', r'\bis\s+'),
             (r'\bnever\s+', r'\balways\s+'),
             (r'\bless\s+than\s+', r'\bmore\s+than\s+'),
             (r'\bdoes not\s+', r'\bdoes\s+'),
-            (r'\bdoes not support\b', r'\bsupports?\b'),
-            (r'\bdoes not have\b', r'\bhas\b'),
         ]
         
         for neg_pat, pos_pat in negation_patterns:
@@ -141,60 +161,10 @@ class GlobalVerifier:
         
         result = ". ".join(top_sentences)
         return result[:max_length] if result else context[:max_length]
-    
-    def _counterfactual_check(
-        self,
-        claim: str,
-        context: str,
-        nli_labels: List[ClaimLabel]
-    ) -> List[ClaimLabel]:
-        """Check counterfactual stability."""
-        if not nli_labels:
-            return nli_labels
-        
-        original = nli_labels[0]
-        
-        if original.label in ["contradicted", "baseless"]:
-            counterfactual_claims = [
-                f"{claim} is false",
-                f"Is it true that {claim}?"
-            ]
-            
-            for cf in counterfactual_claims:
-                if cf.lower() == claim.lower():
-                    continue
-                cf_result = self._nli_verification(cf, context)
-                if cf_result and cf_result[0].label == original.label:
-                    original.confidence *= 0.9
-        
-        return nli_labels
-    
-    def _determine_label(
-        self,
-        local_result,
-        nli_labels: List[ClaimLabel]
-    ) -> tuple:
-        """Determine final claim label."""
-        if not local_result.overall_support:
-            return "baseless", local_result.confidence * 0.7
-        
-        if not nli_labels:
-            return "baseless", 0.4
-        
-        nli_label = nli_labels[0]
-        
-        if nli_label.label == "contradicted" and nli_label.confidence > self.nli_threshold:
-            return "contradicted", nli_label.confidence * 0.8
-        
-        if nli_label.label == "entailed" and nli_label.confidence > self.nli_threshold:
-            return "entailed", nli_label.confidence
-        
-        return "baseless", 0.4
-    
-    def _calculate_reliability(self, local_result, nli_labels: List[ClaimLabel]) -> float:
+
+    def _calculate_reliability(self, local_result, nli_label: ClaimLabel) -> float:
         """Calculate reliability score (0-1)."""
         local_score = local_result.avg_similarity if local_result.overall_support else 0.1
-        nli_score = max(l.confidence for l in nli_labels) if nli_labels else 0.1
-        
+        nli_score = nli_label.confidence if nli_label else 0.1
         reliability = 0.6 * local_score + 0.4 * nli_score
         return min(max(reliability, 0.1), 0.95)

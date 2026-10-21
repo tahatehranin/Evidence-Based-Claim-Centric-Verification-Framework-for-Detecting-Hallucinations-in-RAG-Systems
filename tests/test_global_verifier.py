@@ -10,4 +10,4 @@ def test_global_verifier():
     context = "Spot is a dog. The dog is 5 years old."
 
     result = verifier.verify(claim, context)
-    assert result.final_label in ["entailed", "baseless", "contradicted"]
+    assert result.final_label in ["S", "N", "C"]

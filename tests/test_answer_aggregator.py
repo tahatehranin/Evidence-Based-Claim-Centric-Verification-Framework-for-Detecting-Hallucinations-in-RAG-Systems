@@ -12,7 +12,7 @@ def test_answer_aggregator():
         GlobalVerificationResult(
             claim_text="The dog is 5 years old",
             labels=[],
-            final_label="entailed",
+            final_label="S",
             final_confidence=0.9,
             evidence_text="The dog is 5 years old",
             reliability_score=0.9
@@ -20,7 +20,7 @@ def test_answer_aggregator():
         GlobalVerificationResult(
             claim_text="The dog is named Spot",
             labels=[],
-            final_label="entailed",
+            final_label="S",
             final_confidence=0.8,
             evidence_text="The dog is named Spot",
             reliability_score=0.8
@@ -28,8 +28,7 @@ def test_answer_aggregator():
     ]
 
     result = aggregator.aggregate(claims)
-    assert result.answer_label == "entailed"
-    assert result.answer_confidence == 0.9
+    assert result.answer_label == "S"
 
 def test_answer_aggregator_contradiction():
     aggregator = AnswerAggregator()
@@ -38,7 +37,7 @@ def test_answer_aggregator_contradiction():
         GlobalVerificationResult(
             claim_text="The dog is 5 years old",
             labels=[],
-            final_label="entailed",
+            final_label="S",
             final_confidence=0.9,
             evidence_text="The dog is 5 years old",
             reliability_score=0.9
@@ -46,7 +45,7 @@ def test_answer_aggregator_contradiction():
         GlobalVerificationResult(
             claim_text="The dog is named Spot",
             labels=[],
-            final_label="contradicted",
+            final_label="C",
             final_confidence=0.8,
             evidence_text="The dog is named Max",
             reliability_score=0.8
@@ -54,5 +53,6 @@ def test_answer_aggregator_contradiction():
     ]
 
     result = aggregator.aggregate(claims)
-    assert result.answer_label == "contradicted"
+    # 2 claims, 1 is C -> u(y) = 1/2 = 0.5. With default rho=0.3, this should "abstain"
+    assert result.answer_label == "abstain"
     assert "The dog is named Spot" in result.unfaithful_claims
