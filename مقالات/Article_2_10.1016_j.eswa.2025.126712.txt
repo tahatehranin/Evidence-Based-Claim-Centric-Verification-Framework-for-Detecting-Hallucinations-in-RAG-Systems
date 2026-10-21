@@ -1,5 +1,0 @@
-Title: HaluCheck: Explainable and verifiable automation for detecting hallucinations in LLM responses
-DOI: 10.1016/j.eswa.2025.126712
-
-Abstract:
-No abstract available.

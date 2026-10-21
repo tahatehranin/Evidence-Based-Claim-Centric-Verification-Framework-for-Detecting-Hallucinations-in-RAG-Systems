@@ -1,5 +1,0 @@
-Title: Fact, Fetch, and Reason: A Unified Evaluation of Retrieval-Augmented Generation
-DOI: 10.18653/v1/2025.naacl-long.243
-
-Abstract:
-No abstract available.

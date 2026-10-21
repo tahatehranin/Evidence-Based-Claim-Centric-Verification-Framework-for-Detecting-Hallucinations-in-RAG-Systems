@@ -1,5 +1,0 @@
-Title: Towards evidence-aware retrieval-augmented generation via self-corrective chain-of-thought
-DOI: 10.1016/j.ipm.2025.104369
-
-Abstract:
-No abstract available.

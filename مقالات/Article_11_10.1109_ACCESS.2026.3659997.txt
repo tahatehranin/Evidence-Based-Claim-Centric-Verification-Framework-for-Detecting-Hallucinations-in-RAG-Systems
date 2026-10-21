@@ -1,5 +1,0 @@
-Title: Large Language Model Hallucination Mitigation in Three Industrial Use Cases
-DOI: 10.1109/ACCESS.2026.3659997
-
-Abstract:
-No abstract available.

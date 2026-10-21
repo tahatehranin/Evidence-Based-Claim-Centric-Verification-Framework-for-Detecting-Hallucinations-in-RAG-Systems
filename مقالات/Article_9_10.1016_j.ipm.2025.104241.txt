@@ -1,5 +1,0 @@
-Title: DelphiAgent: A trustworthy multi-agent verification framework for automated fact verification
-DOI: 10.1016/j.ipm.2025.104241
-
-Abstract:
-No abstract available.

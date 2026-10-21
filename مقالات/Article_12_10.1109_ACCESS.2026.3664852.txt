@@ -1,5 +1,0 @@
-Title: An Empirical Evaluation of Retrieval, Reranking, and Similarity for a Q&amp;A-Based Retrieval Augmented Generation System
-DOI: 10.1109/ACCESS.2026.3664852
-
-Abstract:
-No abstract available.

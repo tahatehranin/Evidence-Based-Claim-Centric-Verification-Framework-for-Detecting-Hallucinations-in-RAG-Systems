@@ -1,5 +1,0 @@
-Title: Evidence-Aligned Entity Verification for Hallucination Detection in Retrieval-Augmented Generation
-DOI: 10.18653/v1/2026.findings-acl.1477
-
-Abstract:
-No abstract available.

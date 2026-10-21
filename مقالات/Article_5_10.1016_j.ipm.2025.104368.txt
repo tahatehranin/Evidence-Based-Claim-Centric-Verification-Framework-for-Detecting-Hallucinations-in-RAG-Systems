@@ -1,5 +1,0 @@
-Title: Defining the problem: The impact of OCR quality on retrieval-augmented generation performance and strategies for improvement
-DOI: 10.1016/j.ipm.2025.104368
-
-Abstract:
-No abstract available.
