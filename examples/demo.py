@@ -1,4 +1,8 @@
 """Example demonstrating the hallucination detection framework."""
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
+
 from verifier import RAGHallucinationVerifier
 
 
@@ -17,10 +21,12 @@ def example_1_simple():
     
     verifier = RAGHallucinationVerifier(
         context=context,
-        answer=answer,
-        enable_web_verification=False
+        answer=answer
     )
-    verifier.print_report()
+    result = verifier.verify()
+    print(f"Answer label: {result.answer_label}")
+    for claim in result.claim_results:
+        print(f"  [{claim['final_label']}] {claim['claim_text']}")
 
 
 def example_2_hallucinated():
@@ -36,10 +42,12 @@ def example_2_hallucinated():
     
     verifier = RAGHallucinationVerifier(
         context=context,
-        answer=answer,
-        enable_web_verification=False
+        answer=answer
     )
-    verifier.print_report()
+    result = verifier.verify()
+    print(f"Answer label: {result.answer_label}")
+    for claim in result.claim_results:
+        print(f"  [{claim['final_label']}] {claim['claim_text']}")
 
 
 def example_3_contradiction():
@@ -55,10 +63,12 @@ def example_3_contradiction():
     
     verifier = RAGHallucinationVerifier(
         context=context,
-        answer=answer,
-        enable_web_verification=False
+        answer=answer
     )
-    verifier.print_report()
+    result = verifier.verify()
+    print(f"Answer label: {result.answer_label}")
+    for claim in result.claim_results:
+        print(f"  [{claim['final_label']}] {claim['claim_text']}")
 
 
 if __name__ == "__main__":

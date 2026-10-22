@@ -6,12 +6,12 @@
 
 ## Overview
 
-This framework implements evidence-based hallucination detection for RAG systems using a claim-centric approach with hierarchical verification.
+This framework implements evidence-based hallucination detection for RAG systems using a claim-centric approach with hierarchical verification. The core methodology and formulas are based on the paper provided in `main_paper/مقاله_RAG_متدولوژی_دقیق_2__1_.docx`.
 
 ## 🚀 Key Features
 
-- **Claim Decomposition**: Splits generated answers into atomic, verifiable claims
-- **Hierarchical Verification**: Local + global verification pipeline
+- **Claim Decomposition**: Splits generated answers into atomic, verifiable claims ($C = \{c_1, c_2, ..., c_n\}$)
+- **Hierarchical Verification**: Local + global verification pipeline mapping claims to $\{S, C, N\}$
 - **Evidence Grounding**: Returns explicit context-side evidence with each claim
 - **Multi-Signal Scoring**: Combines lexical similarity + contradiction detection + counterfactual stability
 - **Entity-Centric Alignment**: Identity, semantic, and consistency alignment dimensions
@@ -20,33 +20,33 @@ This framework implements evidence-based hallucination detection for RAG systems
 
 ### Pipeline Stages
 
-1. **Claim Decomposition** (`claim_decomposer.py`)
+1. **Claim Decomposition** (`src/claim_decomposer.py`)
    - Segment answer into sentences
    - Decompose each sentence into atomic claims
    - Preserve qualifiers (negation, quantities, temporal markers)
 
-2. **Local Verification** (`local_verifier.py`)
+2. **Local Verification** (`src/local_verifier.py`)
    - Split context into overlapping chunks
    - Screen each claim against chunks using lexical similarity
    - OR-join chunk-specific assessments
 
-3. **Global Verification** (`global_verifier.py`)
+3. **Global Verification** (`src/global_verifier.py`)
    - Re-verify against full context
    - Detect contradictions (numeric mismatches, negation patterns)
    - Extract final evidence spans
    - Assign final claim labels
 
-4. **Answer-Level Aggregation** (`answer_aggregator.py`)
+4. **Answer-Level Aggregation** (`src/answer_aggregator.py`)
    - AND-join: single unfaithful claim flags entire answer
-   - Labels: Entailed, Contradicted, Baseless
+   - Labels: Supported (S), Contradicted (C), Not Enough Evidence/Baseless (N)
 
 ## 📊 Verification Labels
 
 | Label | Meaning | Confidence Formula |
 |-------|---------|---------------------|
-| Entailed | Claim supported by evidence | `0.5 × similarity + 0.3 × chunk + 0.2` |
-| Contradicted | Claim conflicts with evidence | Contradiction detection + negation patterns |
-| Baseless | No relevant evidence found | Low similarity + neutral NLI |
+| Entailed (S) | Claim supported by evidence | `0.5 × similarity + 0.3 × chunk + 0.2` |
+| Contradicted (C) | Claim conflicts with evidence | Contradiction detection + negation patterns |
+| Baseless (N) | No relevant evidence found | Low similarity + neutral NLI |
 
 ## 📚 Evidence Sources
 
@@ -74,13 +74,15 @@ bash setup.sh
 ## 💻 Usage
 
 ```python
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from verifier import RAGHallucinationVerifier
 
 # Initialize verifier
 verifier = RAGHallucinationVerifier(
     context="Retrieved context passages...",
     answer="Generated response text...",
-    enable_web_verification=False
 )
 
 # Verify
@@ -88,11 +90,16 @@ result = verifier.verify()
 
 # Output
 print(f"Answer label: {result.answer_label}")
-print(f"Confidence: {result.answer_confidence:.3f}")
+print(f"Uncertainty: {result.uncertainty_score:.3f}")
 for claim in result.claim_results:
-    print(f"  [{claim['label']}] {claim['text']}")
-    print(f"    Evidence: {claim['evidence']}")
-    print(f"    Confidence: {claim['confidence']:.3f}")
+    print(f"  [{claim['final_label']}] {claim['claim_text']}")
+    print(f"    Evidence: {claim['evidence_text']}")
+    print(f"    Confidence: {claim['final_confidence']:.3f}")
+```
+
+You can run a demo example using:
+```bash
+python examples/demo.py
 ```
 
 ## 🧪 Testing and CI
@@ -126,7 +133,7 @@ Test cases cover:
 verifier = RAGHallucinationVerifier(
     context=context,
     answer=answer,
-    enable_counterfactual_stability=True,  # Counterfactual checks
-    allow_partial_faithfulness=False       # AND-join (default)
+    rho=0.3,
+    tau=0.6
 )
 ```
