@@ -1,4 +1,5 @@
 """Global verification module - final hierarchical verification implementing Eq 3 & 4."""
+from configs.config import default_config
 from typing import List, Dict, Any
 from dataclasses import dataclass
 from local_verifier import LocalVerificationResult, LocalVerifier
@@ -35,11 +36,13 @@ class GlobalVerifier:
     
     def __init__(
         self,
-        tau: float = DEFAULT_TAU,
+        tau: float = None,
         nli_threshold: float = 0.45,
         counterfactual_stability: bool = True
     ):
         self.tau = tau
+        if self.tau is None:
+            self.tau = default_config.tau
         self.nli_threshold = nli_threshold
         self.counterfactual_stability = counterfactual_stability
         self._local_verifier = LocalVerifier()

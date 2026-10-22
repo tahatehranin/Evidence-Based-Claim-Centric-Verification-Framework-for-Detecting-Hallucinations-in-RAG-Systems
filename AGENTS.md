@@ -9,7 +9,7 @@ This repository implements the methodology for an evidence-based, claim-centric 
 - **Docstrings**: Use clear, concise docstrings for all modules, classes, and methods explaining their purpose and parameters.
 
 ## Core Methodology & Equations
-The Python code MUST rigorously follow the mathematical symbols and methodology from the core paper (`main_paper/مقاله_RAG_متدولوژی_دقیق_2__1_.docx`).
+The Python code MUST rigorously follow the mathematical symbols and methodology from the core paper (`main_paper/مقاله_RAG_متدولوژی_دقیق-3.docx`).
 - **Claim Extraction**: The answer is divided into atomic claims $C = \{c_1, c_2, ..., c_n\}$.
 - **Verification Labels**: Each claim $c_i$ is mapped to $y_i \in \{S, C, N\}$ (Supported, Contradicted, Not Enough Evidence/Baseless).
 - **Equations to Implement/Keep Track of**:

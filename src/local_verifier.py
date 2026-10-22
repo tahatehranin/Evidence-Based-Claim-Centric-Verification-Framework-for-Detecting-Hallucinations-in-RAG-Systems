@@ -1,4 +1,5 @@
 """Local verification module - checks claims against overlapping context chunks."""
+from configs.config import default_config
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 import re
@@ -34,11 +35,15 @@ class LocalVerifier:
     
     def __init__(
         self,
-        similarity_threshold: float = 0.30,
-        overlap: int = 50
+        similarity_threshold: float = None,
+        overlap: int = None
     ):
         self.similarity_threshold = similarity_threshold
         self.overlap = overlap
+        if self.similarity_threshold is None:
+            self.similarity_threshold = 0.30
+        if self.overlap is None:
+            self.overlap = default_config.chunk_overlap
     
     def verify(self, claim_text: str, context: str) -> LocalVerificationResult:
         """Verify a single claim against context chunks."""

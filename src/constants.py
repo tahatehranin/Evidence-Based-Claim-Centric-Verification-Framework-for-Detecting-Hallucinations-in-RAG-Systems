@@ -15,7 +15,7 @@ DEFAULT_RHO = 0.3
 DEFAULT_TAU = 0.6
 
 # Labels
-LABEL_S = "S" # Supported / Entailed
-LABEL_C = "C" # Contradicted
-LABEL_N = "N" # Not Enough Evidence / Baseless
+LABEL_S = "S"
+LABEL_C = "C"
+LABEL_N = "N"
 LABEL_MIXED = "MIXED" # Both S and C evidence exist

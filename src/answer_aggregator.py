@@ -1,4 +1,5 @@
 """Answer-level aggregation - combine claim results into answer label based on methodology."""
+from configs.config import default_config
 from typing import List, Dict
 from dataclasses import dataclass
 from global_verifier import GlobalVerificationResult
@@ -34,8 +35,10 @@ class AnswerAggregator:
     If u(y) >= rho, the system abstains.
     """
 
-    def __init__(self, rho: float = DEFAULT_RHO):
+    def __init__(self, rho: float = None):
         self.rho = rho
+        if self.rho is None:
+            self.rho = default_config.rho
     
     def aggregate(
         self,
@@ -110,7 +113,7 @@ class AnswerAggregator:
         if supported:
             summary_parts.append(f"Supported: {len(supported)} claim(s)")
         if contradicted:
-            summary_parts.append(f"Contradicted: {len(contradicted)} claim(s)")
+            summary_parts.append(f"C: {len(contradicted)} claim(s)")
         if baseless:
             summary_parts.append(f"Unverifiable: {len(baseless)} claim(s)")
 
