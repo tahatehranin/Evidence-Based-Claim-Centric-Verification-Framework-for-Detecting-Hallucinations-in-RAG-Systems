@@ -1,4 +1,5 @@
 """Main verifier module - orchestrates the entire hallucination detection pipeline."""
+from configs.config import default_config
 from typing import Optional
 from dataclasses import dataclass
 from claim_decomposer import ClaimDecomposer, Claim
@@ -25,13 +26,17 @@ class RAGHallucinationVerifier:
         self,
         context: str,
         answer: str,
-        rho: float = DEFAULT_RHO,
-        tau: float = DEFAULT_TAU
+        rho: float = None,
+        tau: float = None
     ):
         self.context = context
         self.answer = answer
         self.rho = rho
         self.tau = tau
+        if self.rho is None:
+            self.rho = default_config.rho
+        if self.tau is None:
+            self.tau = default_config.tau
         
         self.decomposer = ClaimDecomposer()
         self.global_verifier = GlobalVerifier(tau=self.tau)

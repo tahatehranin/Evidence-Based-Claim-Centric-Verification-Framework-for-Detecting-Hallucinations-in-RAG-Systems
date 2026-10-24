@@ -6,7 +6,7 @@
 
 ## Overview
 
-This framework implements evidence-based hallucination detection for RAG systems using a claim-centric approach with hierarchical verification. The core methodology and formulas are based on the paper provided in `main_paper/مقاله_RAG_متدولوژی_دقیق_2__1_.docx`.
+This framework implements evidence-based hallucination detection for RAG systems using a claim-centric approach with hierarchical verification. The core methodology and formulas are based on the paper provided in `main_paper/مقاله_RAG_متدولوژی_دقیق-3.docx`.
 
 ## 🚀 Key Features
 
@@ -38,15 +38,15 @@ This framework implements evidence-based hallucination detection for RAG systems
 
 4. **Answer-Level Aggregation** (`src/answer_aggregator.py`)
    - AND-join: single unfaithful claim flags entire answer
-   - Labels: Supported (S), Contradicted (C), Not Enough Evidence/Baseless (N)
+   - Labels: Supported (S), Contradicted (C), Not Enough Evidence/Not Enough Evidence (N)
 
 ## 📊 Verification Labels
 
 | Label | Meaning | Confidence Formula |
 |-------|---------|---------------------|
-| Entailed (S) | Claim supported by evidence | `0.5 × similarity + 0.3 × chunk + 0.2` |
+| Supported (S) | Claim supported by evidence | `0.5 × similarity + 0.3 × chunk + 0.2` |
 | Contradicted (C) | Claim conflicts with evidence | Contradiction detection + negation patterns |
-| Baseless (N) | No relevant evidence found | Low similarity + neutral NLI |
+| Not Enough Evidence (N) | No relevant evidence found | Low similarity + neutral NLI |
 
 ## 📚 Evidence Sources
 
